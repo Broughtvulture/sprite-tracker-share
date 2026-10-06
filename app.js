@@ -4,6 +4,7 @@ const PLAY_URL="https://play.google.com/store/apps/details?id=com.broughtvulture
 let snapshot=null;
 let activeStatus="All";
 const selectedSprites=new Set();
+const selectedVariants=new Set();
 
 function base64UrlToBytes(value){
   let s=value.replace(/-/g,"+").replace(/_/g,"/");
@@ -43,7 +44,6 @@ function makeCard(item){
   img.src=item.image;
   img.alt=`${item.name} ${item.variant}`;
   img.loading="lazy";
-
   img.onerror=()=>{
     const fallback=document.createElement("div");
     fallback.className="fallback";
@@ -69,55 +69,71 @@ function renderGrid(){
 
   let rows=snapshot.entries;
 
-  if(activeStatus==="Owned"){
-    rows=rows.filter(item=>item.owned);
-  }else if(activeStatus==="Missing"){
-    rows=rows.filter(item=>!item.owned);
-  }
+  if(activeStatus==="Owned") rows=rows.filter(item=>item.owned);
+  if(activeStatus==="Missing") rows=rows.filter(item=>!item.owned);
 
   if(selectedSprites.size>0){
     rows=rows.filter(item=>selectedSprites.has(item.name));
   }
 
+  if(selectedVariants.size>0){
+    rows=rows.filter(item=>selectedVariants.has(item.variant));
+  }
+
   if(rows.length===0){
     grid.innerHTML='<div class="empty">No Sprite variants match these filters.</div>';
+    updateFilterSummary();
     return;
   }
 
   rows.forEach(item=>grid.appendChild(makeCard(item)));
+  updateFilterSummary();
+}
+
+function syncStatusButtons(){
+  document.querySelectorAll("#statusFilters .chip").forEach(button=>{
+    button.classList.toggle("active",button.dataset.status===activeStatus);
+  });
 }
 
 function syncSpriteButtons(){
-  const allButton=document.querySelector('[data-sprite-all="true"]');
-
-  // Empty set = All is selected.
-  allButton.classList.toggle("active",selectedSprites.size===0);
-
   document.querySelectorAll("[data-sprite-name]").forEach(button=>{
-    button.classList.toggle(
-      "active",
-      selectedSprites.has(button.dataset.spriteName)
-    );
+    button.classList.toggle("active",selectedSprites.has(button.dataset.spriteName));
   });
+}
+
+function syncVariantButtons(){
+  document.querySelectorAll("[data-variant-name]").forEach(button=>{
+    button.classList.toggle("active",selectedVariants.has(button.dataset.variantName));
+  });
+}
+
+function resetAllFilters(){
+  activeStatus="All";
+  selectedSprites.clear();
+  selectedVariants.clear();
+  syncStatusButtons();
+  syncSpriteButtons();
+  syncVariantButtons();
+  renderGrid();
+}
+
+function updateFilterSummary(){
+  const parts=[];
+
+  if(activeStatus!=="All") parts.push(activeStatus);
+  if(selectedSprites.size===1) parts.push([...selectedSprites][0]);
+  else if(selectedSprites.size>1) parts.push(`${selectedSprites.size} sprites`);
+
+  if(selectedVariants.size===1) parts.push([...selectedVariants][0]);
+  else if(selectedVariants.size>1) parts.push(`${selectedVariants.size} variants`);
+
+  document.getElementById("filterSummary").textContent=
+    parts.length ? parts.join(" • ") : "All Sprites";
 }
 
 function createSpriteFilters(){
   const container=document.getElementById("spriteFilters");
-
-  const allButton=document.createElement("button");
-  allButton.type="button";
-  allButton.className="chip active";
-  allButton.dataset.spriteAll="true";
-  allButton.textContent="All";
-
-  allButton.addEventListener("click",()=>{
-    selectedSprites.clear();
-    syncSpriteButtons();
-    renderGrid();
-  });
-
-  container.appendChild(allButton);
-
   const names=[...new Set(snapshot.entries.map(item=>item.name))]
     .sort((a,b)=>a.localeCompare(b));
 
@@ -143,17 +159,67 @@ function createSpriteFilters(){
   });
 }
 
+function createVariantFilters(){
+  const preferredOrder=[
+    "Normal",
+    "Gold",
+    "Cheat Master",
+    "Loot Hacker",
+    "Bounty Hunter",
+    "Trick or Treat"
+  ];
+
+  const available=new Set(snapshot.entries.map(item=>item.variant));
+  const variants=preferredOrder.filter(name=>available.has(name));
+
+  const container=document.getElementById("variantFilters");
+
+  variants.forEach(name=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="chip";
+    button.dataset.variantName=name;
+    button.textContent=name;
+
+    button.addEventListener("click",()=>{
+      if(selectedVariants.has(name)){
+        selectedVariants.delete(name);
+      }else{
+        selectedVariants.add(name);
+      }
+
+      syncVariantButtons();
+      renderGrid();
+    });
+
+    container.appendChild(button);
+  });
+}
+
 function setupStatusFilters(){
   document.getElementById("statusFilters").addEventListener("click",event=>{
     const button=event.target.closest("[data-status]");
     if(!button)return;
 
-    document.querySelectorAll("#statusFilters .chip")
-      .forEach(chip=>chip.classList.remove("active"));
+    if(button.dataset.status==="All"){
+      resetAllFilters();
+      return;
+    }
 
-    button.classList.add("active");
     activeStatus=button.dataset.status;
+    syncStatusButtons();
     renderGrid();
+  });
+}
+
+function setupFilterCollapse(){
+  const toggle=document.getElementById("filterToggle");
+  const panel=document.getElementById("filterPanel");
+
+  toggle.addEventListener("click",()=>{
+    const expanded=toggle.getAttribute("aria-expanded")==="true";
+    toggle.setAttribute("aria-expanded",String(!expanded));
+    panel.hidden=expanded;
   });
 }
 
@@ -166,10 +232,13 @@ try{
   document.getElementById("notice").innerHTML=
     `This is a read-only collection snapshot shared from <a href="${PLAY_URL}" target="_blank" rel="noopener">Sprite Tracker</a>.`;
 
-  document.getElementById("controls").hidden=false;
+  document.getElementById("filterShell").hidden=false;
 
+  setupFilterCollapse();
   setupStatusFilters();
   createSpriteFilters();
+  createVariantFilters();
+  syncStatusButtons();
   renderGrid();
 
 }catch(error){

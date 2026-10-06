@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#090d1c">
   <title>Sprite Tracker Collection</title>
-
-  <!-- v4 query string forces browsers/GitHub Pages to fetch the new CSS -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
   <main class="page">
@@ -29,37 +27,48 @@
           Mark variants, share your collection, and compare with other players.
         </div>
       </div>
-      <a class="cta-button" href="https://play.google.com/store/apps/details?id=com.broughtvulture.spritetracker" target="_blank" rel="noopener">
-        Get Sprite Tracker
-      </a>
+      <a class="cta-button" href="https://play.google.com/store/apps/details?id=com.broughtvulture.spritetracker" target="_blank" rel="noopener">Get Sprite Tracker</a>
     </section>
 
-    <section id="controls" class="controls" hidden>
-      <div class="filter-group">
-        <div class="filter-label">COLLECTION</div>
-        <div id="statusFilters" class="chip-row">
-          <button type="button" class="chip active" data-status="All">All</button>
-          <button type="button" class="chip" data-status="Owned">Owned</button>
-          <button type="button" class="chip" data-status="Missing">Missing</button>
-        </div>
-      </div>
+    <section id="filterShell" class="filter-shell" hidden>
+      <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false">
+        <span>
+          <strong>Filters</strong>
+          <span id="filterSummary" class="filter-summary">All Sprites</span>
+        </span>
+        <span id="filterChevron" class="filter-chevron">⌄</span>
+      </button>
 
-      <div class="filter-group">
-        <div class="filter-label">SPRITES</div>
-        <div id="spriteFilters" class="chip-row sprite-filter-row"></div>
+      <div id="filterPanel" class="filter-panel" hidden>
+        <div class="filter-group">
+          <div class="filter-label">COLLECTION</div>
+          <div id="statusFilters" class="chip-row">
+            <button type="button" class="chip active" data-status="All">All</button>
+            <button type="button" class="chip" data-status="Owned">Owned</button>
+            <button type="button" class="chip" data-status="Missing">Missing</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">SPRITE FILTER</div>
+          <div id="spriteFilters" class="chip-row"></div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">VARIANT FILTER</div>
+          <div id="variantFilters" class="chip-row"></div>
+        </div>
       </div>
     </section>
 
     <section id="grid" class="grid" aria-live="polite"></section>
 
     <footer>
-      <p>This page displays only the collection data contained in the scanned link.</p>
-      <p>No phone number, email, Fortnite player name, Firebase ID, or location is included in the QR payload.</p>
+      <p>This is a read-only Sprite collection snapshot. Your Fortnite player name is not shared.</p>
       <p class="fan">Unofficial Fortnite companion. Not endorsed by Epic Games.</p>
     </footer>
   </main>
 
-  <!-- v4 query string forces browsers/GitHub Pages to fetch the new JS -->
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
