@@ -1,33 +1,63 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090d1c">
-<title>Sprite Tracker Collection</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d1c">
+  <title>Sprite Tracker Collection</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main class="page">
-<header class="hero">
-  <div><div class="eyebrow">SPRITE TRACKER</div><h1>Shared Collection</h1>
-  <p class="sub">Anonymous Sprite collection snapshot</p></div>
-  <div id="count" class="count">—</div>
-</header>
-<section id="notice" class="notice">Loading collection…</section>
-<section id="filters" class="filters" hidden>
-  <button class="chip active" data-rarity="All">All</button>
-  <button class="chip" data-rarity="Rare">Rare</button>
-  <button class="chip" data-rarity="Epic">Epic</button>
-  <button class="chip" data-rarity="Legendary">Legendary</button>
-  <button class="chip" data-rarity="Mythic">Mythic</button>
-</section>
-<section id="grid" class="grid"></section>
-<footer>
-<p>This page displays only the collection data contained in the scanned link.</p>
-<p>No phone number, email, Fortnite player name, Firebase ID, or location is included in the QR collection payload.</p>
-<p class="fan">Unofficial Fortnite companion. Not endorsed by Epic Games.</p>
-</footer>
-</main>
-<script src="app.js"></script>
-</body></html>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">SPRITE TRACKER</div>
+        <h1>Shared Collection</h1>
+        <p class="sub">Anonymous Sprite collection snapshot</p>
+      </div>
+      <div id="count" class="count">—</div>
+    </header>
+
+    <section id="notice" class="notice">
+      Loading collection…
+    </section>
+
+    <section class="cta">
+      <div>
+        <div class="cta-title">Track your own Sprite collection</div>
+        <div class="cta-copy">
+          Mark your variants, share your collection, and compare with other Sprite players.
+        </div>
+      </div>
+      <a class="cta-button" href="https://play.google.com/store/apps/details?id=com.broughtvulture.spritetracker" target="_blank" rel="noopener">
+        Get Sprite Tracker
+      </a>
+    </section>
+
+    <section id="controls" class="controls" hidden>
+      <div class="status-row" aria-label="Collection status filter">
+        <button class="chip active" type="button" data-status="Owned">Owned</button>
+        <button class="chip" type="button" data-status="Missing">Missing</button>
+        <button class="chip" type="button" data-status="All">All</button>
+      </div>
+
+      <div class="name-filter">
+        <label for="spriteName">Sprite</label>
+        <select id="spriteName">
+          <option value="All">All Sprites</option>
+        </select>
+      </div>
+    </section>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+
+    <footer>
+      <p>This page displays only the collection data contained in the scanned link.</p>
+      <p>No phone number, email, Fortnite player name, Firebase ID, or location is included in the QR collection payload.</p>
+      <p class="fan">Unofficial Fortnite companion. Not endorsed by Epic Games.</p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
