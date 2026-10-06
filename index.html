@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#090d1c">
   <title>Sprite Tracker Collection</title>
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- v4 query string forces browsers/GitHub Pages to fetch the new CSS -->
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
   <main class="page">
@@ -24,7 +26,7 @@
       <div>
         <div class="cta-title">Track your own Sprite collection</div>
         <div class="cta-copy">
-          Mark your variants, share your collection, and compare with other Sprite players.
+          Mark variants, share your collection, and compare with other players.
         </div>
       </div>
       <a class="cta-button" href="https://play.google.com/store/apps/details?id=com.broughtvulture.spritetracker" target="_blank" rel="noopener">
@@ -33,18 +35,18 @@
     </section>
 
     <section id="controls" class="controls" hidden>
-      <div class="filter-section">
-        <div class="filter-title">STATUS</div>
-        <div class="chip-row" id="statusFilters">
-          <button class="chip active" type="button" data-status="All">All</button>
-          <button class="chip" type="button" data-status="Owned">Owned</button>
-          <button class="chip" type="button" data-status="Missing">Missing</button>
+      <div class="filter-group">
+        <div class="filter-label">COLLECTION</div>
+        <div id="statusFilters" class="chip-row">
+          <button type="button" class="chip active" data-status="All">All</button>
+          <button type="button" class="chip" data-status="Owned">Owned</button>
+          <button type="button" class="chip" data-status="Missing">Missing</button>
         </div>
       </div>
 
-      <div class="filter-section">
-        <div class="filter-title">SPRITES</div>
-        <div class="chip-row sprite-chip-row" id="spriteFilters"></div>
+      <div class="filter-group">
+        <div class="filter-label">SPRITES</div>
+        <div id="spriteFilters" class="chip-row sprite-filter-row"></div>
       </div>
     </section>
 
@@ -52,11 +54,12 @@
 
     <footer>
       <p>This page displays only the collection data contained in the scanned link.</p>
-      <p>No phone number, email, Fortnite player name, Firebase ID, or location is included in the QR collection payload.</p>
+      <p>No phone number, email, Fortnite player name, Firebase ID, or location is included in the QR payload.</p>
       <p class="fan">Unofficial Fortnite companion. Not endorsed by Epic Games.</p>
     </footer>
   </main>
 
-  <script src="app.js"></script>
+  <!-- v4 query string forces browsers/GitHub Pages to fetch the new JS -->
+  <script src="app.js?v=4"></script>
 </body>
 </html>
