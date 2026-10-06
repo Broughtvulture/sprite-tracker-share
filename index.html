@@ -18,9 +18,7 @@
       <div id="count" class="count">—</div>
     </header>
 
-    <section id="notice" class="notice">
-      Loading collection…
-    </section>
+    <section id="notice" class="notice">Loading collection…</section>
 
     <section class="cta">
       <div>
@@ -35,17 +33,18 @@
     </section>
 
     <section id="controls" class="controls" hidden>
-      <div class="status-row" aria-label="Collection status filter">
-        <button class="chip active" type="button" data-status="Owned">Owned</button>
-        <button class="chip" type="button" data-status="Missing">Missing</button>
-        <button class="chip" type="button" data-status="All">All</button>
+      <div class="filter-section">
+        <div class="filter-title">STATUS</div>
+        <div class="chip-row" id="statusFilters">
+          <button class="chip active" type="button" data-status="All">All</button>
+          <button class="chip" type="button" data-status="Owned">Owned</button>
+          <button class="chip" type="button" data-status="Missing">Missing</button>
+        </div>
       </div>
 
-      <div class="name-filter">
-        <label for="spriteName">Sprite</label>
-        <select id="spriteName">
-          <option value="All">All Sprites</option>
-        </select>
+      <div class="filter-section">
+        <div class="filter-title">SPRITES</div>
+        <div class="chip-row sprite-chip-row" id="spriteFilters"></div>
       </div>
     </section>
 

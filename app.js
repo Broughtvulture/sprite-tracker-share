@@ -2,8 +2,8 @@ const CATALOG=[{"id":"bush_normal","name":"Bush","variant":"Normal","rarity":"Ra
 const PLAY_URL="https://play.google.com/store/apps/details?id=com.broughtvulture.spritetracker";
 
 let snapshot=null;
-let activeStatus="Owned";
-let activeName="All";
+let activeStatus="All";
+let selectedSprites=new Set();
 
 function base64UrlToBytes(value){
   let s=value.replace(/-/g,"+").replace(/_/g,"/");
@@ -78,38 +78,82 @@ function renderGrid(){
     rows=rows.filter(x=>!x.owned);
   }
 
-  if(activeName!=="All"){
-    rows=rows.filter(x=>x.name===activeName);
+  if(selectedSprites.size>0){
+    rows=rows.filter(x=>selectedSprites.has(x.name));
   }
 
   if(!rows.length){
-    grid.innerHTML='<div class="empty">No Sprite variants match this filter.</div>';
+    grid.innerHTML='<div class="empty">No Sprite variants match these filters.</div>';
     return;
   }
 
   rows.forEach(item=>grid.appendChild(makeCard(item)));
 }
 
-function setupControls(){
-  const controls=document.getElementById("controls");
-  controls.hidden=false;
+function updateSpriteChipStyles(){
+  const allChip=document.querySelector('[data-sprite="__ALL__"]');
 
-  const select=document.getElementById("spriteName");
+  if(selectedSprites.size===0){
+    allChip.classList.add("active");
+  }else{
+    allChip.classList.remove("active");
+  }
+
+  document.querySelectorAll("[data-sprite-name]").forEach(chip=>{
+    chip.classList.toggle("active",selectedSprites.has(chip.dataset.spriteName));
+  });
+}
+
+function buildSpriteFilters(){
+  const container=document.getElementById("spriteFilters");
+
+  const all=document.createElement("button");
+  all.type="button";
+  all.className="chip active";
+  all.dataset.sprite="__ALL__";
+  all.textContent="All";
+
+  all.addEventListener("click",()=>{
+    selectedSprites.clear();
+    updateSpriteChipStyles();
+    renderGrid();
+  });
+
+  container.appendChild(all);
+
   const names=[...new Set(snapshot.entries.map(x=>x.name))]
     .sort((a,b)=>a.localeCompare(b));
 
   names.forEach(name=>{
-    const option=document.createElement("option");
-    option.value=name;
-    option.textContent=name;
-    select.appendChild(option);
-  });
+    const chip=document.createElement("button");
+    chip.type="button";
+    chip.className="chip";
+    chip.dataset.spriteName=name;
+    chip.textContent=name;
 
-  document.querySelector(".status-row").addEventListener("click",event=>{
+    chip.addEventListener("click",()=>{
+      if(selectedSprites.has(name)){
+        selectedSprites.delete(name);
+      }else{
+        selectedSprites.add(name);
+      }
+
+      updateSpriteChipStyles();
+      renderGrid();
+    });
+
+    container.appendChild(chip);
+  });
+}
+
+function setupControls(){
+  document.getElementById("controls").hidden=false;
+
+  document.getElementById("statusFilters").addEventListener("click",event=>{
     const button=event.target.closest("button[data-status]");
     if(!button)return;
 
-    document.querySelectorAll(".status-row .chip")
+    document.querySelectorAll("#statusFilters .chip")
       .forEach(x=>x.classList.remove("active"));
 
     button.classList.add("active");
@@ -117,10 +161,7 @@ function setupControls(){
     renderGrid();
   });
 
-  select.addEventListener("change",()=>{
-    activeName=select.value;
-    renderGrid();
-  });
+  buildSpriteFilters();
 }
 
 try{
