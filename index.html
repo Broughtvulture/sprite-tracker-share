@@ -2,74 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090d1c">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#081522">
   <title>Sprite Tracker Collection</title>
-  <link rel="stylesheet" href="styles.css?v=11">
+  <meta name="description" content="View a shared Sprite Tracker collection.">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="page">
-    <header class="hero">
+  <main class="page-shell">
+    <section class="hero">
       <div>
-        <div class="eyebrow">SPRITE TRACKER</div>
+        <p class="eyebrow">SPRITE TRACKER</p>
         <h1>Shared Collection</h1>
-        <p class="sub">Anonymous Sprite collection snapshot</p>
+        <p class="subtitle">See which Sprite variants this Tracker has collected.</p>
       </div>
-      <div id="count" class="count">—</div>
-    </header>
-
-    <section id="notice" class="notice">Loading collection…</section>
-
-    <section class="cta">
-      <div>
-        <div class="cta-title">Track your own Sprite collection</div>
-        <div class="cta-copy">
-          Mark variants, share your collection, and compare with other players.
-        </div>
-      </div>
-      <a class="cta-button" href="https://play.google.com/store/apps/details?id=com.broughtvulture.spritetracker" target="_blank" rel="noopener">Get Sprite Tracker</a>
+      <div class="status-pill" id="shareStatus">Reading collection…</div>
     </section>
 
-    <section id="filterShell" class="filter-shell" hidden>
-      <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false">
-        <span>
-          <strong>Filters</strong>
-          <span id="filterSummary" class="filter-summary">All Sprites</span>
-        </span>
-        <span id="filterChevron" class="filter-chevron">⌄</span>
-      </button>
+    <section class="stats" aria-label="Collection summary">
+      <article class="stat-card">
+        <span class="stat-label">Owned</span>
+        <strong id="ownedCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Missing</span>
+        <strong id="missingCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Total</span>
+        <strong id="totalCount">0</strong>
+      </article>
+    </section>
 
-      <div id="filterPanel" class="filter-panel" hidden>
-        <div class="filter-group">
-          <div class="filter-label">COLLECTION</div>
-          <div id="statusFilters" class="chip-row">
-            <button type="button" class="chip active" data-status="All">All</button>
-            <button type="button" class="chip" data-status="New">New</button>
-            <button type="button" class="chip" data-status="Owned">Owned</button>
-            <button type="button" class="chip" data-status="Missing">Missing</button>
-          </div>
-        </div>
-
-        <div class="filter-group">
-          <div class="filter-label">SPRITE FILTER</div>
-          <div id="spriteFilters" class="chip-row"></div>
-        </div>
-
-        <div class="filter-group">
-          <div class="filter-label">VARIANT FILTER</div>
-          <div id="variantFilters" class="chip-row"></div>
-        </div>
+    <section class="toolbar">
+      <div class="segmented" role="group" aria-label="Collection filter">
+        <button class="filter-button active" data-filter="all" type="button">All</button>
+        <button class="filter-button" data-filter="owned" type="button">Owned</button>
+        <button class="filter-button" data-filter="missing" type="button">Missing</button>
       </div>
     </section>
 
-    <section id="grid" class="grid" aria-live="polite"></section>
+    <section>
+      <div id="message" class="message" hidden></div>
+      <div id="spriteGrid" class="sprite-grid" aria-live="polite"></div>
+    </section>
 
     <footer>
-      <p>This is a read-only Sprite collection snapshot. Your Fortnite player name is not shared.</p>
-      <p class="fan">Unofficial Fortnite companion. Not endorsed by Epic Games.</p>
+      <p>Shared from Sprite Tracker</p>
     </footer>
   </main>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js"></script>
 </body>
 </html>
